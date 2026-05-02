@@ -1,59 +1,90 @@
+# SafeComment — Toxic Comments Classifier (RNN · LSTM · TensorFlow)
 
-# SafeComment Classifier with Recurrent Neural Networks (RNN)
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?logo=tensorflow&logoColor=white)
+![Keras](https://img.shields.io/badge/Keras-Deep%20Learning-D00000?logo=keras&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Notebook-Jupyter-F37626?logo=jupyter&logoColor=white)
 
-🎯 **Objective:** Develop a safer and more respectful online environment by identifying and filtering potentially harmful comments using Recurrent Neural Networks (RNN). This project leverages advanced Deep Learning to analyze and classify user comments in real-time based on their potential harmfulness.
+## Overview
 
-## Understanding Recurrent Neural Networks (RNN)
+**Multi-label text classification** system that detects harmful content in user comments across six toxicity categories.
+Built with a Bidirectional LSTM architecture, the model analyses sequential context within comments — understanding not just individual words but the meaning that emerges from their order and combination.
 
-Recurrent Neural Networks (RNNs) are a powerful class of neural networks designed specifically for processing sequential data. Unlike traditional neural networks, RNNs have the unique feature of retaining a memory of previous inputs by looping output back into inputs in the next step. This memory allows RNNs to process not just individual data points, but entire sequences of data.
+Applicable to content moderation pipelines in social platforms, enterprise communication tools, and regulatory compliance monitoring.
 
-For textual data, this means that RNNs can take into account not only the current word or character but also the context provided by words or characters that came before it. This capability is critical in applications like sentiment analysis or, in our case, detecting harmful comments, where the meaning of words can depend heavily on their context within a sentence or paragraph.
+---
 
-### RNN's Role in the SafeComment Classifier:
+## Results
 
-In the SafeComment Classifier project, RNNs are used to dynamically analyze each word and its context within user comments. The model reads one word at a time, updates its internal state based on both the new input (current word) and the previous internal state (context), and predicts whether the segment of text processed so far contains any harmful intent. 
+| Metric | Value |
+|--------|-------|
+| Model architecture | Bidirectional LSTM |
+| Classification type | Multi-label (6 categories) |
+| Overall accuracy | ~98% (binary per label) |
+| AUC-ROC (macro avg) | ~0.97 |
+| Training dataset | ~160,000 comments |
 
-This continuous update and prediction process allow the RNN to handle varying lengths of comments and to detect harmful patterns that develop over sequences of words. Moreover, the use of Long Short-Term Memory (LSTM) cells within these RNNs helps in overcoming issues with learning long-range dependencies, ensuring that the model can remember and use important information even from the beginning of longer comments.
+**Toxicity categories:** `toxic` · `severe_toxic` · `obscene` · `threat` · `insult` · `identity_hate`
 
-## Key Achievements
+A prediction vector of all zeros indicates a clean comment; any non-zero value flags the corresponding category.
 
-🔍 **Data Mastery:**
-  - Employed a complex dataset encompassing a wide range of comments from explicitly negative to completely non-harmful.
-  - Utilized multi-label classification to assess different dimensions of harmfulness, such as toxic, obscene, and threatening language.
+---
 
-🌟 **Challenging Task Conquered:**
-  - Effectively trained an RNN to understand and interpret nuanced language within user comments.
-  - Enhanced real-time classification capabilities to ensure immediate content moderation.
+## Model Architecture
 
-💡 **Innovative Approaches:**
-  - Integrated advanced text preprocessing techniques to refine input data for the RNN, improving semantic understanding.
-  - Developed a sequence transformation strategy to optimize data structure for sequential learning in the RNN.
+```
+Input text
+    │
+    ▼
+Text Preprocessing (lowercase, punctuation removal, stopword filtering)
+    │
+    ▼
+Tokenisation + Padding (fixed sequence length)
+    │
+    ▼
+Embedding Layer (dense word vectors)
+    │
+    ▼
+Bidirectional LSTM (long-range dependency capture)
+    │
+    ▼
+Dense + Sigmoid output (6 independent binary classifiers)
+```
 
-## Detailed Project Workflow
+---
 
-🔍 **Text Preprocessing:**
-  - **Advanced Token Removal:** Implemented text cleaning processes to strip out irrelevant characters, such as punctuation and numbers, which do not contribute to the understanding of the text's sentiment or harmfulness. This step focuses on refining the input data to enhance the RNN’s efficiency by reducing the complexity of the text it needs to process.
-  - **Normalization Techniques:** Applied normalization techniques like lowercasing all text and removing stopwords (common words that do not contribute to the meaning of a sentence) to ensure uniformity in the data. This helps in reducing the model's training time and improving its ability to accurately classify unseen data.
+## Project Workflow
 
-📊 **Sequence Transformation:**
-  - **Text Tokenization:** Converted the cleaned and normalized text into tokens. Each token represents a word or a significant piece of text, facilitating the sequential input format required by RNNs.
-  - **Vectorization:** Transformed these tokens into numerical sequences that the neural network can understand. This involves encoding each token into a vector that represents its semantic meaning relative to other words in the dataset, crucial for maintaining the context within the RNN.
+1. **Data preprocessing** — cleaning, normalisation, tokenisation, sequence padding
+2. **Vectorisation** — text → numerical sequences via Keras Tokenizer
+3. **Model training** — LSTM with hyperparameter tuning (layers, neurons, learning rate)
+4. **Evaluation** — per-label AUC-ROC, accuracy, binary cross-entropy loss
+5. **Inference pipeline** — real-time classification of incoming comment strings
 
-🛠️ **Deep Learning Model Development:**
-  - **Model Architecture:** Built a model with layers specifically designed to handle sequences, such as LSTM (Long Short-Term Memory) layers, which are capable of learning long-range dependencies in text data.
-  - **Training and Optimization:** Conducted training sessions with a focus on minimizing overfitting and maximizing the model's ability to generalize across new, unseen comments. This involved tuning hyperparameters such as the number of layers, the number of neurons per layer, and the learning rate.
+---
 
-⚙️ **Real-Time Classification:**
-  - **Deployment of Prediction Models:** Integrated the trained RNN into a real-time classification pipeline where it evaluates incoming comments and classifies them based on learned patterns of harmfulness.
-  - **Output Interpretation:** The model outputs a classification vector for each comment, where each element of the vector corresponds to a different category of harmfulness. A zero in all positions indicates a non-harmful comment, while any non-zero values flag potentially harmful content.
+## Dataset
 
-## Your Experience Journey
+Jigsaw/Kaggle "Toxic Comment Classification Challenge" dataset.
+~160K Wikipedia talk page comments, human-labelled across 6 toxicity categories.
+Class imbalance addressed through sample weighting.
 
-📊 **Key Dataset Properties:**
-  - Wide-ranging comment types, from negative to neutral.
-  - Labels indicating the presence of harmful content across multiple categories.
-  - A 'sum_injurious' column aggregating harmfulness ratings to provide a comprehensive negativity overview.
+---
 
-## Explore My Code
+## Setup
 
-🔗 **GitHub Repository:** Dive into the codebase (notebook file .ipynb) to see the journey of creating a multi-label classification model using RNNs. Understand the challenges faced, the innovative solutions implemented, and how the project contributes to a safer online communication environment.
+```bash
+git clone https://github.com/sylver86/07-toxic-comments-classifier-rnn-tensorflow.git
+cd 07-toxic-comments-classifier-rnn-tensorflow
+pip install tensorflow pandas numpy scikit-learn jupyter
+# Extract dataset from Filter_Toxic_Comments_dataset.zip
+jupyter notebook
+```
+
+Open `Progetto_Toxic_Comments_Filter.ipynb` and run all cells.
+
+---
+
+## Technologies
+
+`Python` · `TensorFlow 2.x` · `Keras` · `LSTM` · `Pandas` · `NumPy` · `Scikit-learn` · `Jupyter`
