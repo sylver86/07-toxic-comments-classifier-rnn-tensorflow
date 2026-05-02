@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.env
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model artifacts
+*.h5
+*.keras
+saved_model/
+
+# OS
+.DS_Store
+Thumbs.db
